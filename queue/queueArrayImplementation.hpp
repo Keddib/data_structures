@@ -10,30 +10,43 @@
 
 // generic queue implementation with a circular array
 
-#include <list>
-
+#define BUFF_SIZE 24
 
 template<typename T>
 class queue
 {
 	private:
 		/* data */
-		list<T> lst;
+		T array[BUFF_SIZE];
+		int front;
+		int rear;
 
 	public:
-		queue(/* args */) {}
-		~queue() { lst.clear(); }
-		void clear() { lst.clear(); }
-		bool isEmpty() const { lst.empty(); }
-		T& front() { lst.front(); }
-		T dequeue() {
-			T x = lst.front();
-			lst.pop_front();
-			return x;
+		queue(/* args */): front(-1), rear(-1) {}
+		~queue() { }
+		void clear() { front = rear = -1; }
+		bool isEmpty() const { return (front == -1 && rear == -1); }
+		const T& frontt() { return array[front]; }
+
+		void dequeue() {
+			if (isEmpty())
+				return;
+			else if (front == rear)
+				front = rear = -1;
+			else
+				front = (front + 1) % BUFF_SIZE;
 		}
 		void enqueue(const T &el) {
-			lst.push_back(el);
+			if ((rear + 1) % BUFF_SIZE == front) // is full
+				return ;
+			else if (isEmpty()) // is empty
+				rear = front = 0;
+			else
+				rear = (rear + 1) % BUFF_SIZE;
+			array[rear] = el;
 		}
+
+		void print() {}
 };
 
 
