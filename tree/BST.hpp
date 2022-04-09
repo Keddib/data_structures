@@ -21,7 +21,7 @@ struct Node
 
 
 template <typename U>
-class Tree {
+class BST {
 
 	private:
 		Node<U> *_root;
@@ -34,7 +34,7 @@ class Tree {
 		typedef const U& const_reference;
 		typedef Node<U>	node;
 		// methods
-		Tree(): _root(NULL) {}
+		BST(): _root(NULL) {}
 
 		void insert(const_reference value)
 		{
@@ -48,7 +48,7 @@ class Tree {
 			}
 			Node<U> * newNode = new Node<U>(value, y);
 			if (y == NULL)
-				_root = newNode; // tree was empty
+				_root = newNode; // BST was empty
 			else if (value < y->key)
 				y->left = newNode;
 			else y->right = newNode;
@@ -73,9 +73,9 @@ class Tree {
 			delete z;
 		}
 
-		Node *searchTree(const_reference key) const
+		node *searchTree(const_reference key) const
 		{
-			Node *tmp = _root;
+			node *tmp = _root;
 			while ( tmp != NULL && tmp->key != key)
 			{
 				if (key < tmp->key)
@@ -86,50 +86,69 @@ class Tree {
 			return tmp;
 		}
 
-		Node *minimum(node *t) const
+		node *minimum(node *t) const
 		{
 			if (t == NULL)
 				return t;
-			Node *tmp = t;
+			node *tmp = t;
 			while (tmp->left != NULL)
 				tmp = tmp->left;
 			return tmp;
 		}
 
-		Node *maximum(node *t) const
+		node *maximum(node *t) const
 		{
 			if (t == NULL)
 				return t;
-			Node *tmp = t;
+			node *tmp = t;
 			while (tmp->right != NULL)
 				tmp = tmp->right;
 			return tmp;
 		}
-		Node *successor(Node *x) const
+		node *successor(node *x) const
 		{
 			if (x == NULL)
 				return x;
 			if (x->right != NULL)
 				return minimum(x->right);
-			Node *y = x->p;
+			node *y = x->p;
 			while (y != NULL && x == y->right){
 				x = y;
 				y = y->p;
 			}
 			return y;
 		}
-		Node *predecessor(Node *x) const
+		node *predecessor(node *x) const
 		{
 			if (x == NULL)
 				return x;
 			if (x->left != NULL)
 				return maximum(x->left);
-			Node *y = x->p;
+			node *y = x->p;
 			while (y != NULL && x != y->right){
 				x = y;
 				y = y->p;
 			}
 			return y;
+		}
+
+		void printBT(const std::string& prefix, const Node<int> * root, bool isLeft)
+		{
+		    if( root != nullptr )
+		    {
+		        std::cout << prefix;
+		        std::cout << (isLeft ? "├──" : "└──" );
+		        // print the value of the node
+		        std::cout << root->key << std::endl;
+		        // enter the next tree level - left and right branch
+		        printBT( prefix + (isLeft ? "│   " : "    "), root->left, true);
+		        printBT( prefix + (isLeft ? "│   " : "    "), root->right, false);
+		    }
+		}
+
+		void printBT()
+		{
+		    printBT("", _root, false);
 		}
 
 		private:
